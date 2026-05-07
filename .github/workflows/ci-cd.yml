@@ -65,19 +65,21 @@ jobs:
           repository: ${{ secrets.DEPLOY_REPO }}
           token: ${{ secrets.GIT_TOKEN }}
           ref: main
+          path: k8s-repo
 
       - name: Update backend image tag
         run: |
-          sed -i "s#$REPOSITORY_URI/$ECR_BACKEND:.*#$REPOSITORY_URI/$ECR_BACKEND:$IMAGE_TAG#g" deployment.yml
+          sed -i "s#REPOSITORY_URI/ECR_BACKEND_REPO:.*#$REPOSITORY_URI/$ECR_BACKEND:$IMAGE_TAG#g" k8s-repo/k8s/backend-deployment.yml
 
       - name: Update frontend image tag
         run: |
-          sed -i "s#$REPOSITORY_URI/$ECR_FRONTEND:.*#$REPOSITORY_URI/$ECR_FRONTEND:$IMAGE_TAG#g" deployment.yml
+          sed -i "s#REPOSITORY_URI/ECR_FRONTEND_REPO:.*#$REPOSITORY_URI/$ECR_FRONTEND:$IMAGE_TAG#g" k8s-repo/k8s/frontend-deployment.yml
 
       - name: Commit and push
         run: |
+          cd k8s-repo
           git config user.email "${{ secrets.GIT_EMAIL }}"
           git config user.name "${{ secrets.GIT_USER_NAME }}"
-          git add deployment.yml
+          git add k8s/backend-deployment.yml k8s/frontend-deployment.yml
           git commit -m "Update images to version $IMAGE_TAG"
           git push origin main
