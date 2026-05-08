@@ -8,17 +8,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const router = express.Router();
+
 // healthcheck (ważne pod k8s / AWS)
 app.get("/health", (req, res) => res.send("OK"));
 
 // GET
-app.get("/notes", async (req, res) => {
+router.get("/notes", async (req, res) => {
   const result = await pool.query("SELECT * FROM notes ORDER BY id DESC");
   res.json(result.rows);
 });
 
 // POST
-app.post("/notes", async (req, res) => {
+router.post("/notes", async (req, res) => {
   const { content } = req.body;
 
   const ai = await analyzeNote(content);
@@ -32,7 +34,7 @@ app.post("/notes", async (req, res) => {
 });
 
 // PUT
-app.put("/notes/:id", async (req, res) => {
+router.put("/notes/:id", async (req, res) => {
   const { content } = req.body;
   const { id } = req.params;
 
@@ -47,11 +49,13 @@ app.put("/notes/:id", async (req, res) => {
 });
 
 // DELETE
-app.delete("/notes/:id", async (req, res) => {
+router.delete("/notes/:id", async (req, res) => {
   const { id } = req.params;
   await pool.query("DELETE FROM notes WHERE id=$1", [id]);
   res.sendStatus(204);
 });
+
+app.use("/api", router);
 
 app.listen(config.port, () =>
   console.log(`API running on ${config.port}`)
