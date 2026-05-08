@@ -48,7 +48,7 @@ jobs:
 
       - name: Build & push frontend
         run: |
-          docker build -t $ECR_FRONTEND ./frontend
+          docker build -t $ECR_FRONTEND --build-arg VITE_API_URL=${{ secrets.VITE_API_URL }} ./frontend
           docker tag $ECR_FRONTEND:latest $REPOSITORY_URI/$ECR_FRONTEND:${{ steps.tag.outputs.tag }}
           docker push $REPOSITORY_URI/$ECR_FRONTEND:${{ steps.tag.outputs.tag }}
 
