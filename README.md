@@ -1,2 +1,2 @@
-# internship-project-app
-Repository for my notes app. My future goal is deploying this app on k8s.
+# internship-project-deployments
+Deployment for my project on EKS
