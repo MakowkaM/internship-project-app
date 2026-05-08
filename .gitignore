@@ -19,3 +19,4 @@ Thumbs.db
 
 # Kubernetes secrets
 k8s/secret.yml
+#ss
