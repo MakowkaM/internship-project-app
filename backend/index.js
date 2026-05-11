@@ -60,7 +60,7 @@ router.delete("/notes/:id", async (req, res) => {
   res.sendStatus(204);
 });
 
-app.use("/api", router);
+app.use("/", router);
 
 app.listen(config.port, () =>
   console.log(`API running on ${config.port}`)
