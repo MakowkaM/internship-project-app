@@ -19,13 +19,13 @@ const router = express.Router();
 app.get("/health", (req, res) => res.send("OK"));
 
 // GET
-router.get("/notes", async (req, res) => {
+router.get("/api/notes", async (req, res) => {
   const result = await pool.query("SELECT * FROM notes ORDER BY id DESC");
   res.json(result.rows);
 });
 
 // POST
-router.post("/notes", async (req, res) => {
+router.post("/api/notes", async (req, res) => {
   const { content } = req.body;
 
   const ai = await analyzeNote(content);
@@ -39,7 +39,7 @@ router.post("/notes", async (req, res) => {
 });
 
 // PUT
-router.put("/notes/:id", async (req, res) => {
+router.put("/api/notes/:id", async (req, res) => {
   const { content } = req.body;
   const { id } = req.params;
 
@@ -54,7 +54,7 @@ router.put("/notes/:id", async (req, res) => {
 });
 
 // DELETE
-router.delete("/notes/:id", async (req, res) => {
+router.delete("/api/notes/:id", async (req, res) => {
   const { id } = req.params;
   await pool.query("DELETE FROM notes WHERE id=$1", [id]);
   res.sendStatus(204);
