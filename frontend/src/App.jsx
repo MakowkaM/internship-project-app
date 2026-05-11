@@ -266,4 +266,4 @@ export default function App() {
   );
 }
 
-//komentarz
+//komentarz12
