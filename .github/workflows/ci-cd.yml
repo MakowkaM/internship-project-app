@@ -72,11 +72,11 @@ jobs:
 
       - name: Update backend image tag
         run: |
-          sed -i "s#REPOSITORY_URI/ECR_BACKEND_REPO:.*#$REPOSITORY_URI/$ECR_BACKEND:$IMAGE_TAG#g" k8s-repo/backend-deployment.yaml
+          sed -i "s|image:.*$ECR_BACKEND:.*|image: $REPOSITORY_URI/$ECR_BACKEND:$IMAGE_TAG|g" k8s-repo/backend-deployment.yaml
 
       - name: Update frontend image tag
         run: |
-          sed -i "s#REPOSITORY_URI/ECR_FRONTEND_REPO:.*#$REPOSITORY_URI/$ECR_FRONTEND:$IMAGE_TAG#g" k8s-repo/frontend-deployment.yaml
+          sed -i "s|image:.*$ECR_FRONTEND:.*|image: $REPOSITORY_URI/$ECR_FRONTEND:$IMAGE_TAG|g" k8s-repo/frontend-deployment.yaml
 
       - name: Commit and push
         run: |
