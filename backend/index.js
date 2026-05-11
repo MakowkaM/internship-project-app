@@ -6,8 +6,11 @@ const config = require("./config");
 
 const app = express();
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || "*"
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+app.options("*", cors());
 app.use(express.json());
 
 const router = express.Router();
