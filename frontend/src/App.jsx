@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const SOCKET_URL = API.replace("/api", "");
 
 const s = {
   root: {
@@ -205,6 +207,20 @@ export default function App() {
   };
 
   useEffect(() => { fetchNotes(); }, []);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+    socket.on("note:created", (note) => {
+      setNotes((prev) => [note, ...prev]);
+    });
+    socket.on("note:updated", (note) => {
+      setNotes((prev) => prev.map((n) => (n.id === note.id ? note : n)));
+    });
+    socket.on("note:deleted", ({ id }) => {
+      setNotes((prev) => prev.filter((n) => n.id !== id));
+    });
+    return () => socket.disconnect();
+  }, []);
 
   const addNote = async () => {
     if (!content.trim()) return;
